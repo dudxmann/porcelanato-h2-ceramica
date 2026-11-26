@@ -174,7 +174,7 @@ def fig_tornado():
                 ax.text(v + (2 if v > base else -2), i, br(v, 0), va="center", ha="left" if v > base else "right", fontsize=6.4)
     ax.axvline(base, color="#33475B", lw=0.7)
     ax.set_yticks(range(len(linhas))); ax.set_yticklabels([l[1] for l in linhas], fontsize=6.6)
-    ax.set_xlabel(f"VPL (US$ milhões); caso-base {br(base, 0)}"); ax.set_xlim(-420, -190)
+    ax.set_xlabel(f"VPL (US$ milhões); caso-base {br(base, 1)}"); ax.set_xlim(-420, -190)
     ax.spines[["top", "right"]].set_visible(False)
     from matplotlib.patches import Patch
     ax.legend(handles=[Patch(color=COR["eq"], label="primeiro valor da faixa"), Patch(color=COR["imp"], label="segundo valor")],
@@ -245,7 +245,7 @@ def fig_otim():
         ax1.plot([p["P_MW"] for p in L], [p["vpl"] for p in L], color=cor, lw=1.4, ls=ls, label=rot)
         ax1.plot(L[0]["P_MW"], L[0]["vpl"], "o", ms=3.2, color=cor)
     b0 = o["A"]["base"][0]
-    ax1.text(58, -300, f"pontos: o tamanho mínimo, {br(b0['P_MW'], 1)} MW,\né o ótimo nos três casos", fontsize=6.4, color="#33475B", ha="left", va="center", linespacing=1.05)
+    ax1.text(66, -243, f"pontos: o tamanho mínimo, {br(b0['P_MW'], 1)} MW,\né o ótimo nos três casos", fontsize=6.4, color="#33475B", ha="left", va="center", linespacing=1.05)
     ax1.set_xlabel("Eletrolisador (MW), operando nas horas de PLD mais baixo"); ax1.set_ylabel("VPL (US$ milhões)")
     ax1.legend(frameon=False, loc="lower left", fontsize=6.4); ax1.set_title("(a)", loc="left", fontsize=8)
     B = o["B"]

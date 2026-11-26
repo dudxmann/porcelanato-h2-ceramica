@@ -120,7 +120,7 @@ Escape da turbina & 500~°C & \cite{boyce2012}\\
 \Ht{} na mistura da turbina & 30\% vol. & \cite{netl2022}\\
 Consumo do eletrolisador & 58~kWh/kg & de \cite{iea2025b} (57,5) + compressão (hipótese)\\
 Pilha: custo / vida & 17,5\% do eletrolisador / 50.000~h & \cite{iea2025a} (15--20\%) / \cite{iea2025b}\\
-Encargos da fotovoltaica & R\$~120/kW·ano & \cite{epe2025}\\
+Encargos da fotovoltaica & R\$~120/(kW·ano) & \cite{epe2025}\\
 Produtividade da FV (leste-oeste) & 1.137,5~kWh/\allowbreak{}(kWp·ano) & adotada de \cite{canalsolar2022,pvmag2021}\\
 Estado morto (exergia) & 25~°C e 1~atm & hipótese\\
 Exergia química: CH\textsubscript{4} / \Ht{} / \Ot & 831,65 / 236,09 / 3,97~kJ/mol & \cite{bejan1996}\\
@@ -208,7 +208,7 @@ No ciclo proposto (Fig.~\ref{fig:ciclo}) a planta deixa de comprar eletricidade 
 \caption{Ciclo proposto: sistema à parte (campo fotovoltaico, rede, eletrolisador e estoques) e correntes da fábrica, por m² de produto. O \Ht{} vai do eletrolisador à fábrica a 30~bar; só o excedente vai ao estoque a 200~bar, que o devolve na ponta e nas paradas. Com o rendimento de catálogo da turbina, o ar de resfriamento já cobre o secador, e o trocador da exaustão é dispensado.}\label{fig:ciclo}
 \end{figure*}
 
-\subsection{Turbina a gás e atomizador}
+\subsection{Turbina a gás e atomizador}\label{sec:tg}
 
 A turbina precisa entregar 5.208~kW no local, ou 5.600~kW nas condições ISO (Seção~\ref{sec:invest}); o menor modelo de catálogo acima disso é o Taurus 60, com 5.670~kW e rendimento de 31,5\% \cite{gtw2018}, adotado no caso-base para que o rendimento seja o da máquina orçada (35\%, valor típico de \cite{boyce2012}, fica como variante). A energia do combustível e a do escape são
 \begin{align}
@@ -317,7 +317,7 @@ Sem preço comercial para boa parte dos equipamentos, o custo de cada item foi e
 \begin{equation}
 C_{2026} = C_{\text{base}}\, c\, \frac{\mathrm{CEPCI}_{2026}}{\mathrm{CEPCI}_{\text{base}}}, \label{eq:cepci}
 \end{equation}
-em que $c$ é o câmbio para dólar dos itens cotados em libras. Os índices são 397 em 2001 \cite{turton2018}, 525,4 em 2007 \cite{chemeng2026}, 603,1 em 2018 \cite{venturini2021}, 816,0 em 2022 e 798,8 em 2024 \cite{toweringskills}, e 500 nas correlações de \cite{seider2017}; para 2026, 811,6, o de 2024 com a alta de 1,6\% de 2025 \cite{cepci2026} (hipótese). (2) Sobre o equipamento importado soma-se 80\%, orientação da disciplina com origem no fator de 0,87 de \cite{izidoro2016}; o fabricado no Brasil leva o fator de localização de 1,14 \cite{towler2022}. (3) A instalação e (4) os indiretos também são multiplicados por 1,14. A fotovoltaica é a exceção: o preço da EPE já é do Brasil, convertido a 6,10~R\$/US\$ e atualizado só pelo CEPCI. Os custos anuais e os totais em reais usam 5,3488~R\$/US\$ \cite{agrolink2026}.
+em que $c$ é o câmbio para dólar dos itens cotados em libras. Os índices são 397 em 2001 \cite{turton2018}, 525,4 em 2007 \cite{chemeng2026}, 603,1 em 2018 \cite{venturini2021}, 816,0 em 2022 e 798,8 em 2024 \cite{toweringskills}, e 500 nas correlações de \cite{seider2017}; para 2026, 811,6, o de 2024 com a alta de 1,6\% de 2025 \cite{cepci2026} (hipótese). (2) Sobre o equipamento importado soma-se 80\%, orientação da disciplina com origem no fator de 0,87 de \cite{izidoro2016}; o fabricado no Brasil leva o fator de localização de 1,14 \cite{towler2022}. (3) A instalação e (4) os indiretos também são multiplicados por 1,14. A fotovoltaica é a exceção: o preço da EPE já é do Brasil, convertido a 6,10~R\$/US\$ e atualizado só pelo CEPCI. Os demais custos anuais (a operação e manutenção da fotovoltaica, da EPE, também a 6,10) e os totais em reais usam 5,3488~R\$/US\$ \cite{agrolink2026}.
 
 A potência de catálogo é dada a 15~°C; com perda de 0,7\% por °C acima disso (hipótese, dentro dos 5\% a 10\% a cada 10~°C de \cite{wartsila}) e 25~°C no mês mais quente (Florianópolis: 24,7~°C em fevereiro \cite{embrapa}),
 \begin{equation}
@@ -340,7 +340,7 @@ Forno: queimadores de \Ht{} + \Ot{} (18,1~MWt) & conversão para \Ht{} por porte
 Queimador de duto a \Ht{} (2,0~MWt) & idem, sem o fator 2: £~29,5 mil & importado & 0,08\\
 Compressor de \Ht{} (101~kW, 30 para 200~bar, só o excedente) & US\$~146,6 mil (CEPCI 500) \cite{seider2017}; instalação de 30\% \cite{nrel2014} & importado & 0,51\\
 Ventilador da recuperação (64.126 cfm) & US\$~18,1 mil (CEPCI 500) \cite{seider2017}; instalação de 30\% \cite{nrel2014} & nacional & 0,04\\
-Dutos, tubulações de \Ht{} e \Ot{} e instrumentação & 15\% do custo instalado da turbina, do forno, do queimador de duto e do ventilador (hipótese); trocador dispensado (Seção 5.2) & -- & 2,98\\
+Dutos, tubulações de \Ht{} e \Ot{} e instrumentação & 15\% do custo instalado da turbina, do forno, do queimador de duto e do ventilador (hipótese); trocador dispensado (Seção~\ref{sec:tg}) & -- & 2,98\\
 \midrule
 \textbf{Total} (fábrica 22,9; sistema à parte 239,9) & & & \textbf{262,8}\\
 \bottomrule
@@ -357,7 +357,7 @@ O investimento total é de US\$~262,8 milhões (R\$~1,41 bilhão), 91\% no siste
 
 \subsection{Fluxo de caixa e critérios}\label{sec:fluxo}
 
-A análise segue Lora e Nascimento \cite{lora2004}, em termos reais, antes de impostos, com taxa de 8\% ao ano e vida de 25 anos \cite{epe2025}. O benefício anual é o que a fábrica deixa de comprar em relação ao ciclo 0: 19,2 milhões de m³ de gás natural a R\$~3,1667/m³ (tarifa da SCGÁS para matéria-prima, hipótese) \cite{scgas2026}, US\$~11,4 milhões, e 43,8~GWh a R\$~600/MWh (hipótese), US\$~4,9 milhões. Os custos anuais são a operação e manutenção da fotovoltaica, R\$~60/kW·ano \cite{epe2025} (US\$~3,0 milhões); a manutenção dos demais itens, 1,5\% ao ano do investimento sem a fotovoltaica \cite{lora2004} (US\$~1,7 milhão); o uso da rede, US\$~6,6 milhões (demanda do eletrolisador, parcela de energia e tarifa da usina \cite{aneel2026}, e acerto na CCEE com o preço horário de 2024 e 2025 \cite{ccee2025} sobre os 60,6\% da energia que passam pela rede no perfil do campo \cite{pvgis2026}); a troca das pilhas, que a 7.580~h/ano ocorre nos anos 7, 14 e 20, cada uma a 17,5\% do custo do eletrolisador, US\$~11,2 milhões em valor presente, ou US\$~1,0 milhão por ano; e os encargos da fotovoltaica, R\$~120/kW·ano \cite{epe2025}, menos os R\$~48/kW·ano da tarifa da usina já contados no uso da rede, US\$~4,0 milhões. O fluxo anual é
+A análise segue Lora e Nascimento \cite{lora2004}, em termos reais, antes de impostos, com taxa de 8\% ao ano e vida de 25 anos \cite{epe2025}. O benefício anual é o que a fábrica deixa de comprar em relação ao ciclo 0: 19,2 milhões de m³ de gás natural a R\$~3,1667/m³ (tarifa da SCGÁS para matéria-prima, hipótese) \cite{scgas2026}, US\$~11,4 milhões, e 43,8~GWh a R\$~600/MWh (hipótese), US\$~4,9 milhões. Os custos anuais são a operação e manutenção da fotovoltaica, R\$~60/(kW·ano) \cite{epe2025} (US\$~3,0 milhões); a manutenção dos demais itens, 1,5\% ao ano do investimento sem a fotovoltaica \cite{lora2004} (US\$~1,7 milhão); o uso da rede, US\$~6,6 milhões (demanda do eletrolisador, parcela de energia e tarifa da usina \cite{aneel2026}, e acerto na CCEE com o preço horário de 2024 e 2025 \cite{ccee2025} sobre os 60,6\% da energia que passam pela rede no perfil do campo \cite{pvgis2026}); a troca das pilhas, que a 7.580~h/ano ocorre nos anos 7, 14 e 20, cada uma a 17,5\% do custo do eletrolisador, US\$~11,2 milhões em valor presente, ou US\$~1,0 milhão por ano; e os encargos da fotovoltaica, R\$~120/(kW·ano) \cite{epe2025}, menos os R\$~48/(kW·ano) da tarifa da usina já contados no uso da rede, US\$~4,0 milhões. O fluxo anual é
 \begin{equation}
 \begin{split}
 \mathrm{FC} &= 11{,}4 + 4{,}9 - 3{,}0 - 1{,}7 - 6{,}6 - 1{,}0 - 4{,}0\\
@@ -407,7 +407,7 @@ O projeto não se paga (Tabela~\ref{tab:econ}): o benefício anual mal cobre os 
 
 \subsection{Cenários e sensibilidade}
 
-O preço do gás natural forma 70\% do benefício anual. Sem crédito de carbono, o VPL se anula com o gás a R\$~10,03/m³, 3,2 vezes o de hoje; com o gás pelo dobro, o VPL é de −US\$~142,0 milhões, e pelo triplo, ainda de −US\$~20,4 milhões (Tabela~\ref{tab:cenarios}). Baratear o investimento sozinho não basta: sem o acréscimo de importação, o VPL é de −US\$~224,1 milhões; com o gás pelo triplo e o investimento pela metade, chega a +US\$~125,6 milhões. Para 2030, com o eletrolisador chinês a 675~US\$/kW e a fotovoltaica com o fator $18/26 = 0{,}69$, a queda que a IEA projeta para o custo da energia solar na América Latina \cite{iea2025b} (hipótese), o investimento cai para US\$~202,5 milhões e o \Ht{} para 5,66~US\$/kg, mas o VPL ainda é de −US\$~198,2 milhões. Variado sozinho na sua faixa (Fig.~\ref{fig:tornado}), nenhum parâmetro deixa o VPL positivo; o preço da fotovoltaica pesa mais (−US\$~248 a −389 milhões), seguido dos encargos da fotovoltaica e do preço do eletrolisador. Como o fluxo anual é quase nulo, a taxa e a vida útil quase não mudam o VPL: o resultado é dado pelo investimento.
+O preço do gás natural forma 70\% do benefício anual. Sem crédito de carbono, o VPL se anula com o gás a R\$~10,03/m³, 3,2 vezes o de hoje; com o gás pelo dobro, o VPL é de −US\$~142,0 milhões, e pelo triplo, ainda de −US\$~20,4 milhões (Tabela~\ref{tab:cenarios}). Baratear o investimento sozinho não basta: sem o acréscimo de importação, o VPL é de −US\$~224,1 milhões; com o gás pelo triplo e o investimento pela metade, chega a +US\$~125,6 milhões. Para 2030, com o eletrolisador chinês a 675~US\$/kW e a fotovoltaica com o fator $18/26 = 0{,}69$, a queda que a IEA projeta para o custo da energia solar na América Latina \cite{iea2025b} (hipótese), o investimento cai para US\$~202,5 milhões e o \Ht{} para 5,66~US\$/kg, mas o VPL ainda é de −US\$~198,2 milhões. Variado sozinho na sua faixa (Fig.~\ref{fig:tornado}), nenhum parâmetro deixa o VPL positivo; o preço da fotovoltaica pesa mais (−US\$~248 a −389 milhões), seguido do preço do eletrolisador e dos encargos da fotovoltaica. Como o fluxo anual é quase nulo, a taxa e a vida útil quase não mudam o VPL: o resultado é dado pelo investimento.
 
 \begin{table}[!t]
 \centering
@@ -580,7 +580,7 @@ Eficiência exergética $\psi$ & 31,0\% & 37,4\% & 24,6\%\\
 
 \textit{Energia e emissões.} A redução de 61\% do \COt{} fóssil custa 26\% mais energia total, 6,4 pontos de eficiência exergética e um campo de 223~ha fora da planta. Ligar o campo e o eletrolisador à rede reduziu o eletrolisador para 43,8~MW, mas torna o hidrogênio renovável apenas por balanço anual e transfere à rede a variação da fotovoltaica.
 
-\textit{Carbono.} O projeto não recebe crédito pelo carbono evitado: para empatar, a tonelada teria de valer US\$~611, contra cerca de €~90/t no mercado europeu em novembro de 2026 \cite{yermolenko2026}. No SBCE, que obriga a conciliar as emissões acima de 25~mil~t~\COt{}e/ano \cite{lei15042}, o ciclo 0 emitiria 64,9~mil~t/ano de escopo 1 e o ciclo proposto, com o rendimento do Taurus 60, 26,1~mil~t/ano: o projeto não tira a fábrica da conciliação, só a reduz a 1,1~mil~t/ano, mais o \COt{} dos carbonatos da massa, que não foi levantado. Com 35\%, ficaria em 23,5~mil~t/ano, abaixo do limite.
+\textit{Carbono.} O projeto não recebe crédito pelo carbono evitado: para empatar, a tonelada teria de valer US\$~611, contra cerca de €~90/t no mercado europeu em novembro de 2026 \cite{yermolenko2026}. No SBCE, que obriga a conciliar as emissões acima de 25~mil~t~\COt{}e/ano \cite{lei15042}, o ciclo 0 emitiria 64,9~mil~t/ano de escopo 1 e o ciclo proposto, com o rendimento do Taurus 60, 26,1~mil~t/ano: o projeto reduz as emissões a conciliar a 40\% das do ciclo 0, mas não tira a fábrica da conciliação: fica 1,1~mil~t/ano acima do limite, sem contar o \COt{} dos carbonatos da massa, que não foi levantado. Com 35\%, ficaria em 23,5~mil~t/ano, abaixo do limite.
 
 \textit{Economia.} O preço do eletrolisador parte do custo chinês e é otimista; a tarifa da usina foi tomada igual à das eólicas; o acerto na CCEE usa preços médios de cada mês e hora, sem os dias nublados de preço alto. Os custos que ficaram fora (Seção~\ref{sec:fluxo}) só piorariam o resultado.
 
