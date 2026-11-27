@@ -16,6 +16,7 @@ Código e dados do artigo *Descarbonização da fabricação de porcelanato com 
 | `artigo_v2/figs/gera_figs_rev.py` | Figuras do artigo (`*_rev.pdf` e `.png`) |
 | `artigo_v2/monta_rev.py` | Roda tudo e compila o artigo (`Grupo-03__Artigo_rev.tex`) |
 | `memorial/Grupo-03__Memorial.pdf` | Memorial de cálculo (83 páginas), com os mesmos números do artigo |
+| `memorial/Etapa4_Poster_A2.pdf` | Pôster A2 do ciclo proposto (turbina a 31,5%), o mesmo do Apêndice A do memorial |
 | `precificacao/` | PLD horário do Sul de 2024 e 2025 (CCEE) e perfil horário do campo FV (PVGIS) usados no acerto na CCEE |
 
 ## Como rodar
