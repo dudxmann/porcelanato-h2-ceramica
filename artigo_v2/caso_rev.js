@@ -86,7 +86,7 @@ const SENS = [
   ["Manutenção: 1,5% a 3,0% ao ano", { ajusta: (c, e) => { e.OM_RESTO = 0.015; } }, { ajusta: (c, e) => { e.OM_RESTO = 0.03; } }],
   ["Acerto na CCEE: R$ 21 a 77/MWh", { ajusta: c => { c.K_PLD = R.PC0.K_PLD * 20.5053 / 48.803; } }, { ajusta: c => { c.K_PLD = R.PC0.K_PLD * 77.1008 / 48.803; } }],
   ["Encargos da FV: R$ 48 a 120/kW·ano", { o: { ...R.COMPLETO, encEPE: 0 } }, {}],
-  ["Eletricidade evitada: R$ 450 a 750/MWh", { ajusta: (c, e) => { e.P_EL = 750; } }, { ajusta: (c, e) => { e.P_EL = 450; } }],
+  ["Eletricidade evitada: R$ 450 a 750/MWh", { ajusta: (c, e) => { e.P_EL = 450; } }, { ajusta: (c, e) => { e.P_EL = 750; } }],
 ].map(([n, a, b]) => ({ nome: n, lo: mi(R.caso({}, a).x.vpl), hi: mi(R.caso({}, b).x.vpl), tirLo: R.caso({}, a).x.tir, tirHi: R.caso({}, b).x.tir }));
 R.PE.P_EL = R.PE0.P_EL;
 R.PE.TAXA = R.PE0.TAXA; R.PE.VIDA = R.PE0.VIDA;
