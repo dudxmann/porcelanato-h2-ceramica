@@ -95,7 +95,7 @@ def fig_ciclo():
 
 # ───────────────────── Fig. 2: fontes de calor ─────────────────────
 def fig_calor():
-    casos = [("Atomizador", [("Ciclo 0", {"gn": 39.60}), ("Recuperação", {"ar": 12.97, "trc": 1.14, "gn": 25.48}),
+    casos = [("Atomizador", [("Ciclo 0", {"gn": 39.60}), ("Recuperação", {"ar": 12.97, "trc": 1.14, "gn": 25.49}),
                              ("Proposto", {"esc": V["ESC"], "ar": V["AR_AT"], "h2": V["DUTO"]})]),
              ("Secador", [("Ciclo 0", {"gn": 11.09}), ("Recuperação", {"trc": 7.07, "gn": 4.02}), ("Proposto", {"ar": 11.09})]),
              ("Forno", [("Ciclo 0", {"gn": 54.91}), ("Recuperação", {"gn": 54.91}), ("Proposto", {"h2": V["Q_F"]})])]
@@ -280,9 +280,11 @@ def fig_otim():
     ax1.set_xlabel("Eletrolisador (MW), operando nas horas de PLD mais baixo"); ax1.set_ylabel("VPL (US$ milhões)")
     ax1.legend(frameon=False, loc="lower left", fontsize=6.4); ax1.set_title("(a)", loc="left", fontsize=8)
     B = o["B"]
-    ax2.scatter([p["co2Ano"] / 1000 for p in B], [p["vpl"] for p in B], s=4, color=COR["gn"], alpha=0.45, lw=0, zorder=1)
     pas = o["passos"]
-    ax2.plot([p["co2Ano"] / 1000 for p in pas], [p["vpl"] for p in pas], color="#33475B", lw=0.9, marker="o", ms=3.2, zorder=2)
+    # caminho embaixo (linha fina) e as 286 configurações por cima, em círculos vazados, para que fiquem visíveis
+    ax2.plot([p["co2Ano"] / 1000 for p in pas], [p["vpl"] for p in pas], color="#33475B", lw=0.6, alpha=0.7, zorder=1)
+    ax2.scatter([p["co2Ano"] / 1000 for p in B], [p["vpl"] for p in B], s=9, facecolors="none", edgecolors="#7F8C99", lw=0.45, zorder=2)
+    ax2.plot([p["co2Ano"] / 1000 for p in pas], [p["vpl"] for p in pas], lw=0, marker="o", ms=3.4, color="#33475B", zorder=3)
     rot = [f"sem H$_2$ (turbina a gás natural\ne recuperação): +{br(pas[0]['vpl'], 0)}",
            f"+ forno a H$_2$: {br(pas[1]['vpl'], 0)} ({br(pas[1]['custoT'], 0)} US\\$/t)",
            f"+ duto a H$_2$: {br(pas[2]['vpl'], 0)} ({br(pas[2]['custoT'], 0)} US\\$/t)",
