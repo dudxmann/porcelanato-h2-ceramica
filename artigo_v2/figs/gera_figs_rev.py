@@ -95,7 +95,7 @@ def fig_ciclo():
 
 # ───────────────────── Fig. 2: fontes de calor ─────────────────────
 def fig_calor():
-    casos = [("Atomizador", [("Ciclo 0", {"gn": 39.60}), ("Recuperação", {"ar": 12.97, "trc": 1.14, "gn": 25.48}),
+    casos = [("Atomizador", [("Ciclo 0", {"gn": 39.60}), ("Recuperação", {"ar": 12.97, "trc": 1.14, "gn": 25.49}),
                              ("Proposto", {"esc": V["ESC"], "ar": V["AR_AT"], "h2": V["DUTO"]})]),
              ("Secador", [("Ciclo 0", {"gn": 11.09}), ("Recuperação", {"trc": 7.07, "gn": 4.02}), ("Proposto", {"ar": 11.09})]),
              ("Forno", [("Ciclo 0", {"gn": 54.91}), ("Recuperação", {"gn": 54.91}), ("Proposto", {"h2": V["Q_F"]})])]
