@@ -162,6 +162,37 @@ def fig_invest():
     salva(fig, "fig_invest")
 
 
+# ───────────────────── Fig. 5: dinheiro acumulado ─────────────────────
+def fig_fluxo():
+    """Fluxo anual sem a anualização das pilhas (fluxo + pilhasAno) e as trocas nos anos em que ocorrem;
+    a 8% o acumulado termina no VPL do caso-base."""
+    inv, i = BASE["inv"], 0.08
+    anual = BASE["fluxo"] + BASE["pilhasAno"]
+    horas = (24 - 3 * 5 / 7) * 0.95 * 365
+    troca = C["investimento"]["elz"]["usd"] * 0.175
+    anos_troca = {int(-(-k * 50000 // horas)) for k in range(1, 4)}
+    anos, sem, a8, s, d = [0], [-inv], [-inv], -inv, -inv
+    for ano in range(1, 26):
+        f = anual - (troca if ano in anos_troca else 0)
+        s += f; d += f / (1 + i) ** ano
+        anos.append(ano); sem.append(s); a8.append(d)
+    fig, ax = plt.subplots(figsize=(COL, 1.9))
+    ax.plot(anos, sem, color=COR["gn"], lw=1.3, label="sem desconto")
+    ax.plot(anos, a8, color=COR["imp"], lw=1.6, ls="--", label="a 8% ao ano (VPL)")
+    ax.text(25.4, sem[-1] - 3, br(sem[-1], 1), va="top", fontsize=6.8, color=COR["gn"])
+    ax.text(25.4, a8[-1] + 3, br(a8[-1], 1), va="bottom", fontsize=6.8, color=COR["imp"])
+    for a in sorted(anos_troca):
+        ax.annotate("troca\ndas pilhas", (a, sem[a]), xytext=(a, sem[a - 1] + 4), ha="center", va="bottom", fontsize=5.8, color="#33475B",
+                    arrowprops=dict(arrowstyle="-", color="#33475B", lw=0.5))
+    ax.set_xlabel("Ano"); ax.set_ylabel("US$ milhões acumulados"); ax.set_xlim(0, 28)
+    ax.set_ylim(min(sem) - 8, max(sem) + 20)
+    ax.yaxis.set_major_formatter(__import__("matplotlib").ticker.FuncFormatter(lambda v, _: br(v, 0)))
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.legend(frameon=False, loc="upper left", ncol=2)
+    salva(fig, "fig_fluxo")
+    return sem[-1], a8[-1]
+
+
 # ───────────────────── Fig. 5: tornado ─────────────────────
 def fig_tornado():
     base = BASE["vpl"]
@@ -174,7 +205,7 @@ def fig_tornado():
                 ax.text(v + (2 if v > base else -2), i, br(v, 0), va="center", ha="left" if v > base else "right", fontsize=6.4)
     ax.axvline(base, color="#33475B", lw=0.7)
     ax.set_yticks(range(len(linhas))); ax.set_yticklabels([l[1] for l in linhas], fontsize=6.6)
-    ax.set_xlabel(f"VPL (US$ milhões); caso-base {br(base, 0)}"); ax.set_xlim(-420, -190)
+    ax.set_xlabel(f"VPL (US$ milhões); caso-base {br(base, 1)}"); ax.set_xlim(-420, -190)
     ax.spines[["top", "right"]].set_visible(False)
     from matplotlib.patches import Patch
     ax.legend(handles=[Patch(color=COR["eq"], label="primeiro valor da faixa"), Patch(color=COR["imp"], label="segundo valor")],
@@ -226,7 +257,7 @@ def fig_mc():
         ax3.text(v + 0.03 if dentro else v - 0.02, i, br(v, 2), va="center", ha="left" if dentro else "right", fontsize=6.2, color="white" if dentro else "black")
     ax3.axvline(0, color="#33475B", lw=0.6)
     ax3.set_yticks(range(len(sp))); ax3.set_yticklabels([n for _, n in sp], fontsize=6.6)
-    ax3.set_xlim(-1.05, 0.12); ax3.set_xlabel("Correlação de postos com o VPL")
+    ax3.set_xlim(-1.05, 0.12); ax3.set_xlabel("Correlação de postos")
     ax3.set_title("(c)", loc="left", fontsize=8)
     for ax in (ax2, ax3):
         ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: br(v, 1)))
@@ -245,7 +276,7 @@ def fig_otim():
         ax1.plot([p["P_MW"] for p in L], [p["vpl"] for p in L], color=cor, lw=1.4, ls=ls, label=rot)
         ax1.plot(L[0]["P_MW"], L[0]["vpl"], "o", ms=3.2, color=cor)
     b0 = o["A"]["base"][0]
-    ax1.text(58, -300, f"pontos: o tamanho mínimo, {br(b0['P_MW'], 1)} MW,\né o ótimo nos três casos", fontsize=6.4, color="#33475B", ha="left", va="center", linespacing=1.05)
+    ax1.text(0.56, 0.91, f"pontos: o tamanho mínimo, {br(b0['P_MW'], 1)} MW,\né o ótimo nos três casos", transform=ax1.transAxes, fontsize=6.4, color="#33475B", ha="left", va="center", linespacing=1.05)
     ax1.set_xlabel("Eletrolisador (MW), operando nas horas de PLD mais baixo"); ax1.set_ylabel("VPL (US$ milhões)")
     ax1.legend(frameon=False, loc="lower left", fontsize=6.4); ax1.set_title("(a)", loc="left", fontsize=8)
     B = o["B"]
@@ -302,5 +333,5 @@ def fig_exergia():
 
 
 if __name__ == "__main__":
-    for f in (fig_ciclo, fig_calor, fig_co2, fig_invest, fig_tornado, fig_mc, fig_otim, fig_exergia):
+    for f in (fig_ciclo, fig_calor, fig_co2, fig_invest, fig_fluxo, fig_tornado, fig_mc, fig_otim, fig_exergia):
         f(); print("ok", f.__name__)

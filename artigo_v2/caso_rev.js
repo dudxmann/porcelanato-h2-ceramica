@@ -11,7 +11,7 @@ function resumo(c) {
   const { v, r, x } = c;
   return { h2: v.H2_TOT, gn: v.GN_NM3, co2: v.CO2_P, red: v.RED_CO2, co2Ano: v.CO2_P * ANO / 1000, duto: v.DUTO, trc: v.TRC,
     semTrc: c.semTrc, xE: v.X_H2E, inv: mi(r.total), fab: mi(r.fab), sis: mi(r.sis), vpl: mi(x.vpl), tir: x.tir, lcoh: x.lcoh,
-    abat: x.abat, gasZera: x.gnEq, fluxo: mi(x.fluxo), m2: x.m2 * R.PC.BRL, vpli: mi(x.vpli), tiri: x.tiri, il: x.il,
+    abat: x.abat, gasZera: x.gnEq, pGn: x.pGn, fluxo: mi(x.fluxo), m2: x.m2 * R.PC.BRL, vpli: mi(x.vpli), tiri: x.tiri, il: x.il,
     payb: x.payb, pfv: v.P_FV / 1000, pelz: v.P_INST / 1000, ext: x.ext, ecGn: mi(x.ecGn), ecEl: mi(x.ecEl), omFv: mi(x.omFv),
     omR: mi(x.omR), rede: mi(x.rede), pilhasAno: mi(x.ext.pilhasAno), encAno: mi(x.ext.encAno), frc: x.frc };
 }
@@ -25,18 +25,19 @@ if (Math.abs(confere.vpl_codigo - confere.vpl_planilha) > 0.1) { console.error("
 // ── caso-base revisado e passos da revisão (para mostrar o efeito de cada correção) ──
 const base = R.caso();
 const B = resumo(base);
-const SEM = { pilha: 0, vidaPilha: 50000, encEPE: 0 };
+const SEM = { pilha: 0, vidaPilha: 50000, encEPE: 0, tarifa: "TMP" };
 const passos = [
   ["Artigo v2 (35%, PCI do H₂ a 0 °C, sem pilhas e encargos)", R.caso({ ETA: 0.35, PCI_H2V: 10.78 }, { o: SEM })],
   ["+ PCI do H₂ a 20 °C na Eq. (9)", R.caso({ ETA: 0.35 }, { o: SEM })],
   ["+ turbina a 31,5% (Taurus 60)", R.caso({}, { o: SEM })],
-  ["+ troca das pilhas", R.caso({}, { o: { ...R.COMPLETO, encEPE: 0 } })],
-  ["+ encargos da FV (EPE): caso-base revisado", base],
+  ["+ troca das pilhas", R.caso({}, { o: { ...R.COMPLETO, encEPE: 0, tarifa: "TMP" } })],
+  ["+ encargos da FV (EPE)", R.caso({}, { o: { ...R.COMPLETO, tarifa: "TMP" } })],
+  ["+ tarifa industrial TG1 em cascata: caso-base", base],
 ].map(([n, c]) => ({ nome: n, ...resumo(c) }));
 
 // ── robustez: uma hipótese técnica ou de custo por vez ──
 const ROB = [
-  ["Caso-base revisado", {}],
+  ["Caso-base", {}],
   ["Turbina a 35% (Boyce)", { ETA: 0.35 }],
   ["Eletrólise de 2030 (54 kWh/kg)", { KWH_KG: 54 }],
   ["Frações de calor 49/39/12%", { FR_FOR: 0.49, FR_AT: 0.39, FR_SEC: 0.12 }],
@@ -56,6 +57,8 @@ const CEN = [
   ["Eletrolisador a 600 US$/kW", {}, { celz: 600 }],
   ["Eletrolisador a 1.200 US$/kW", {}, { celz: 1200 }],
   ["Eletrolisador a 2.300 US$/kW (fora da China)", {}, { celz: 2300 }],
+  ["Tarifa de matéria-prima (TMP), como nas versões anteriores", {}, { o: { ...R.COMPLETO, tarifa: "TMP" } }],
+  ["Gás da turbina na tarifa de geração distribuída (TGG)", {}, { o: { ...R.COMPLETO, tarifa: "TG1+TGG" } }],
 ].map(([n, ex, op]) => ({ nome: n, ...resumo(R.caso(ex, op)) }));
 // investimento pela metade e gás pelo triplo: metade de todo o investimento (e da manutenção proporcional a ele)
 {
@@ -168,11 +171,26 @@ const EXE = { c0: exergia(v0, "c0"), rec: exergia(v0, "rec"), prop: exergia(base
 const caminho = { el_por_MJ_H2: base.v.KWH_KG * 3.6 * (1 + base.v.PERDAS) / 120, exGN_por_MJ: PHI_GN,
   psi_elz: EX_H2 / (base.v.KWH_KG * 3.6) };
 // custo médio da exergia de cada insumo (US$/GJ de exergia): primeiro passo da exergoeconomia
-const cEx = { h2: B.lcoh / EX_H2 * 1000, gn: R.PE0.P_GN / R.PC0.BRL / (v0.PCI_GN * PHI_GN) * 1000, el: R.PE0.P_EL / R.PC0.BRL / 3.6 };
+const cEx = { h2: B.lcoh / EX_H2 * 1000, gn: B.pGn / R.PC0.BRL / (v0.PCI_GN * PHI_GN) * 1000, el: R.PE0.P_EL / R.PC0.BRL / 3.6 };
 // recuperação: exergia de 1 MJ de cada corrente recuperada e destruição ao usá-la no atomizador (550 °C) ou no secador (210 °C)
 const correntes = { ar225: exq(225), trc150: exq(150), esc500: exq(500), at550: exq(550), sec210: exq(210) };
 
-const out = { eta: R.ETA_BASE, confere, base: B, v: Object.fromEntries(["H2_TOT", "GN_NM3", "GN_TG", "F_TG", "ESC", "X_H2E", "F_H2_TG", "DUTO", "AR_AT", "AR_SEC", "TRC",
+// recuperação de calor isolada (Seção 4): trocador da exaustão, ventilador e dutos orçados com as correlações da Tabela 4
+// (US$ milhões de 2026); gás evitado pela TG1 em cascata, menos a eletricidade dos ventiladores (0,60 MJe/m²)
+const recup = (() => {
+  const inv = 0.74 + 0.04 + 0.12, gn0 = R.PE0.GN0, gnRec = gn0 - (v0.AR_REC + 8.21) / v0.PCI_GN;   // 12,97 do ar de resfriamento + 8,21 do trocador (Eq. 6)
+  const prod = R.P * 365, m3 = (gn0 - gnRec) * prod;
+  const res = {};
+  for (const tar of ["TG1", "TMP"]) {
+    const p = R.precoEvitado(tar, gn0, gnRec);
+    const ec = (m3 * p - 0.60 / 3.6 * prod / 1000 * R.PE0.P_EL) / R.PC0.BRL / 1e6;   // US$ milhões/ano
+    const fl = ec - 0.015 * inv;
+    res[tar] = { preco: p, economia: ec, vpl: -inv + fl / B.frc, retorno_meses: inv / fl * 12 };
+  }
+  return { inv, m3_ano: m3, ...res };
+})();
+
+const out = { eta: R.ETA_BASE, confere, base: B, recup, v: Object.fromEntries(["H2_TOT", "GN_NM3", "GN_TG", "F_TG", "ESC", "X_H2E", "F_H2_TG", "DUTO", "AR_AT", "AR_SEC", "TRC",
   "AR_REC", "Q_F", "Q_EXA", "M_ESC", "M_AR_AT", "T_SEC_IN", "O2_TOT", "O2_FOR", "O2_VENDA", "E_PV_M2", "P_FV", "P_INST", "A_TER_HA", "N_PLACAS", "REC_TOT", "ENT_TOT",
   "USO_TOT", "ENT_FAB", "CO2_P", "RED_CO2", "RED_GN", "H2_DIA", "P_TG", "T_PRE", "M_GAS_AT", "H2_FOR", "V_EST", "CO2_FV"].map(k => [k, base.v[k]])),
   k: { P_ISO: base.r.k.P_ISO, TG: base.r.k.TG, H2_EXC: base.r.k.H2_EXC, E_DIA: base.r.k.E_DIA }, passos, robustez: ROB, cenarios: CEN,
@@ -205,3 +223,20 @@ console.log(`caminho: ${f(caminho.el_por_MJ_H2, 2)} MJ de eletricidade por MJ de
 console.log(`custo da exergia (US$/GJ): H₂ ${f(cEx.h2, 1)}, GN ${f(cEx.gn, 1)}, eletricidade ${f(cEx.el, 1)}`);
 console.log(`exq: ${Object.entries(correntes).map(([a, b]) => a + " " + f(b, 3)).join("; ")}`);
 console.log(`validação: ${JSON.stringify(val)}`);
+console.log("recuperação:", JSON.stringify(recup));
+
+// alocação do custo da turbina por exergia (regra SPECO para dois produtos do mesmo componente: mesmo custo por
+// unidade de exergia): custo anualizado + manutenção + combustível (gás pela TG1 média do proposto, H₂ pelo LCOH),
+// dividido entre a eletricidade (15,00 MJ/m²) e a exergia térmica do escape a 500 °C
+const turbSpeco = (() => {
+  const vb = base.v, prod = R.P * 365, inv = base.r.por.tg.usd / 1e6;
+  const qd = vb.GN_NM3 * R.P, pGnMed = R.custoDia("TG1", qd) / qd;
+  const cGn = vb.GN_NM3 * prod * pGnMed / R.PC0.BRL / 1e6, cH2 = vb.F_H2_TG / 120 * prod * B.lcoh / 1e6;
+  const cCap = inv * B.frc, cOm = 0.015 * inv, total = cCap + cOm + cGn + cH2;
+  const exEl = vb.E_E || 15.0, exEsc = vb.ESC * exq(500);
+  const cUnit = total * 1e6 / ((exEl + exEsc) * prod / 1000);   // US$/GJ
+  return { inv, pGnMed, cCap, cOm, cGn, cH2, total, exEl, exEsc, cUnit, el_m2: cUnit * exEl / 1000, esc_m2: cUnit * exEsc / 1000,
+    el_kWh: cUnit * 3.6 / 1000, fracEsc: exEsc / (exEl + exEsc) };
+})();
+console.log("turbina (SPECO):", JSON.stringify(turbSpeco));
+require("fs").writeFileSync(require("path").join(__dirname, "caso_rev_extra.json"), JSON.stringify({ recup, turbSpeco }, null, 1));
