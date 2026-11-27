@@ -182,10 +182,10 @@ def fig_fluxo():
     ax.text(25.4, sem[-1] - 3, br(sem[-1], 1), va="top", fontsize=6.8, color=COR["gn"])
     ax.text(25.4, a8[-1] + 3, br(a8[-1], 1), va="bottom", fontsize=6.8, color=COR["imp"])
     for a in sorted(anos_troca):
-        ax.annotate("troca\ndas pilhas", (a, sem[a]), xytext=(a, sem[a] - 4), ha="center", va="top", fontsize=5.8, color="#33475B",
+        ax.annotate("troca\ndas pilhas", (a, sem[a]), xytext=(a, sem[a - 1] + 4), ha="center", va="bottom", fontsize=5.8, color="#33475B",
                     arrowprops=dict(arrowstyle="-", color="#33475B", lw=0.5))
     ax.set_xlabel("Ano"); ax.set_ylabel("US$ milhões acumulados"); ax.set_xlim(0, 28)
-    ax.set_ylim(min(sem) - 14, max(sem) + 12)
+    ax.set_ylim(min(sem) - 8, max(sem) + 20)
     ax.yaxis.set_major_formatter(__import__("matplotlib").ticker.FuncFormatter(lambda v, _: br(v, 0)))
     ax.spines[["top", "right"]].set_visible(False)
     ax.legend(frameon=False, loc="upper left", ncol=2)
@@ -257,7 +257,7 @@ def fig_mc():
         ax3.text(v + 0.03 if dentro else v - 0.02, i, br(v, 2), va="center", ha="left" if dentro else "right", fontsize=6.2, color="white" if dentro else "black")
     ax3.axvline(0, color="#33475B", lw=0.6)
     ax3.set_yticks(range(len(sp))); ax3.set_yticklabels([n for _, n in sp], fontsize=6.6)
-    ax3.set_xlim(-1.05, 0.12); ax3.set_xlabel("Correlação de postos com o VPL")
+    ax3.set_xlim(-1.05, 0.12); ax3.set_xlabel("Correlação de postos")
     ax3.set_title("(c)", loc="left", fontsize=8)
     for ax in (ax2, ax3):
         ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: br(v, 1)))

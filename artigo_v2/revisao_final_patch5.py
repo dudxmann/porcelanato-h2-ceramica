@@ -33,7 +33,7 @@ pares = [
      "(o ciclo 0 usa 88,2~mil~m³/dia, uma fatura de R\\$~313,6~mil por dia, e o proposto, 35,5~mil, R\\$~129,8~mil por dia; o gás evitado"),
     # Custo marginal antes e depois da conversão do forno
     ("614~US\\$/t no forno e cerca de 670~US\\$/t no duto e na turbina,",
-     "614~US\\$/t no forno; depois dele, 650~US\\$/t no duto e 647 na turbina, e, sem converter o forno, 670 e 669, de modo que a ordem dos passos muda pouco o custo,"),
+     "614~US\\$/t no forno, 650 no duto e 647 na turbina (sem converter o forno, o duto e a turbina custariam 670 e 669~US\\$/t),"),
     # Exergia física das correntes recuperadas
     ("o escape a 500~°C no atomizador e o ar a 225~°C no secador destroem só 3,2~MJ/m².",
      "o escape a 500~°C no atomizador e o ar a 225~°C no secador destroem só 3,2~MJ/m². A exergia física das correntes explica a escolha: o escape leva 13,11~MJ/m² (0,402~MJ por MJ sensível) e o ar a 225~°C, 2,61~MJ/m² (0,235); a corrente mais quente vai ao atomizador, que pede gás a 550~°C, e a mais fria ao secador, a 125~°C. Essa comparação usa só correntes de gás calculadas e não depende da exergia retida na peça."),
