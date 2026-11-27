@@ -74,7 +74,7 @@ function roda(x) {
   const { v, r, x: e, semTrc } = c;
   return { h2: v.H2_TOT, gn: v.GN_NM3, co2: v.CO2_P, red: v.RED_CO2, co2Ano: v.CO2_P * P * 365 / 1000, semTrc,
     mAt: v.M_ESC + v.M_AR_AT, mAtLim: v.Q_AT * 1000 / (1.07 * 525), pfv: v.P_FV / 1000, pelz: v.P_INST / 1000,
-    inv: r.total / 1e6, vpl: e.vpl / 1e6, tir: e.tir, lcoh: e.lcoh, abat: e.abat, gasZera: e.gnEq, vplGas: e.ecGn / e.frc / 1e6 };
+    inv: r.total / 1e6, vpl: e.vpl / 1e6, tir: e.tir, lcoh: e.lcoh, abat: e.abat, gasZera: e.gnEq, pGn: e.pGn, vplGas: e.ecGn / e.frc / 1e6 };
 }
 
 const BASE = { eta: 0.315, fr: [0.52, 0.375, 0.105], kwh: 58, celz: 900, cfv: FV_EPE1, imp: 0.80, om: 0.015, pld: DIFM, pilha: 0.175, enc: 120 };
@@ -110,7 +110,7 @@ const prob = {
   co2_25mil: fr(y => y.co2Ano > 25000),
   atomizador_excede: fr(y => y.mAt > y.mAtLim),
   sem_trocador: fr(y => y.semTrc),
-  vpl_pos_gas2: fr(y => y.gasZera <= 2 * PE0.P_GN), vpl_pos_gas3: fr(y => y.gasZera <= 3 * PE0.P_GN),
+  vpl_pos_gas2: fr(y => y.gasZera <= 2 * y.pGn), vpl_pos_gas3: fr(y => y.gasZera <= 3 * y.pGn),
   tir_nula: fr(y => y.tir === null),
   vpl_abaixo_base: fr(y => y.vpl < b0.vpl), lcoh_acima_base: fr(y => y.lcoh > b0.lcoh),
 };
@@ -123,11 +123,12 @@ const conv = { vpl_p50: qtl(outra.map(y => y.vpl), 0.5), lcoh_p50: qtl(outra.map
 for (const k of SAIDAS) for (const [q, pq] of [["p05", 0.05], ["p50", 0.5], ["p95", 0.95]]) {   // maior mudança de um percentil entre as sementes
   const d = Math.abs(qtl(outra.map(y => y[k]).filter(v => v !== null), pq) / est[k][q] - 1);
   if (d > conv.max_rel) { conv.max_rel = d; conv.onde = `${k} ${q}`; }
+  if (k !== "tir" && d > (conv.max_rel_sem_tir || 0)) conv.max_rel_sem_tir = d;   // a TIR, quase nula e só onde existe, varia mais em termos relativos
 }
 // o CO₂ do ciclo proposto só depende do rendimento da turbina (∝ 1/η): rendimento abaixo do qual passa de 25 mil t/ano (SBCE)
 const etaSbce = BASE.eta * b0.co2Ano / 25000;   // abaixo deste rendimento passa de 25 mil t/ano
 
-const out = { N, semente: SEMENTE, eta_sbce: etaSbce, p_gn: PE0.P_GN, base: b0, conferencia_vpl_max: pior,
+const out = { N, semente: SEMENTE, eta_sbce: etaSbce, p_gn: b0.pGn, base: b0, conferencia_vpl_max: pior,
   variaveis: VARS.map(({ id, nome, dist, p, base, un, fonte }) => ({ id, nome, dist, p, base, un, fonte })),
   estatisticas: est, probabilidades: prob, gas_que_zera: gasP, spearman: corr, convergencia: conv };
 fs.writeFileSync(path.join(__dirname, "incerteza_rev.json"), JSON.stringify(out, null, 1));
@@ -142,7 +143,7 @@ const L = [["H₂ (kg/m²)", "h2", 3, 1], ["CO₂ fóssil (kg/m²)", "co2", 2, 1
   ["CO₂ evitado (US$/t)", "abat", 0, 1], ["gás que zera o VPL (R$/m³)", "gasZera", 2, 1], ["campo FV (MWp)", "pfv", 1, 1], ["eletrolisador (MW)", "pelz", 1, 1]];
 console.log("saída | caso-base | P5 | P50 | P95 | média ± dp");
 for (const [n, k, d, m] of L) { const s = est[k]; console.log(`${n} | ${f(b0[k] * m, d)} | ${f(s.p05 * m, d)} | ${f(s.p50 * m, d)} | ${f(s.p95 * m, d)} | ${f(s.media * m, d)} ± ${f(s.dp * m, d)}`); }
-console.log(`\nP(VPL > 0) com o gás de hoje (R$ ${f(PE0.P_GN, 4)}/m³): ${f(prob.vpl_pos * 100, 1)}%`);
+console.log(`\nP(VPL > 0) com o gás de hoje (R$ ${f(b0.pGn, 4)}/m³ evitado, TG1): ${f(prob.vpl_pos * 100, 1)}%`);
 console.log(`P(VPL > 0) com o gás pelo dobro: ${f(prob.vpl_pos_gas2 * 100, 1)}%; pelo triplo: ${f(prob.vpl_pos_gas3 * 100, 1)}%`);
 console.log(`VPL abaixo do caso-base em ${f(prob.vpl_abaixo_base * 100, 1)}% dos sorteios; H₂ acima do caso-base em ${f(prob.lcoh_acima_base * 100, 1)}%`);
 console.log(`gás que zera o VPL: P10 R$ ${f(gasP.p10, 2)}, P50 R$ ${f(gasP.p50, 2)}, P90 R$ ${f(gasP.p90, 2)}/m³ (caso-base R$ ${f(b0.gasZera, 2)})`);
@@ -158,5 +159,5 @@ const TEXL = [["\\Ht{} (kg/m²)", "h2", 3, 1], ["\\COt{} fóssil (kg/m²)", "co2
 const tx = (v, d) => f(v, d).replace("-", "−");
 console.log("\nlinhas LaTeX (Indicador & Base & P5 & P50 & P95):");
 for (const [n, k, d, m] of TEXL) console.log(`${n} & ${tx((k in BP ? BP[k] : b0[k]) * m, d)} & ${tx(est[k].p05 * m, d)} & ${tx(est[k].p50 * m, d)} & ${tx(est[k].p95 * m, d)}\\\\`);
-console.log(`maior mudança de um percentil (P5, P50 ou P95) com a outra semente: ${f(conv.max_rel * 100, 2)}% (${conv.onde})`);
+console.log(`maior mudança de um percentil (P5, P50 ou P95) com a outra semente: ${f(conv.max_rel * 100, 2)}% (${conv.onde}); sem a TIR: ${f(conv.max_rel_sem_tir * 100, 2)}%`);
 console.log(`\nconvergência (semente ${SEMENTE + 1}): VPL P50 ${f(conv.vpl_p50, 1)} (era ${f(est.vpl.p50, 1)}); H₂ P50 ${f(conv.lcoh_p50, 2)} (era ${f(est.lcoh.p50, 2)}); gás P90 ${f(conv.gas_p90, 2)} (era ${f(gasP.p90, 2)}); P(CO₂ > 25 mil) ${f(conv.co2_25mil * 100, 1)}% (era ${f(prob.co2_25mil * 100, 1)}%)`);

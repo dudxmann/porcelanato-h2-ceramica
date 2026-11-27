@@ -16,7 +16,32 @@ const S = require("./modelo.js");
 const P = 30000;
 const ETA_BASE = +(process.env.ETA_BASE || 0.315);
 const REV = { PCI_H2V: 10.78 * 273.15 / 293.15, ETA: ETA_BASE };
-const COMPLETO = { pilha: 0.175, vidaPilha: 50000, encEPE: 120 };   // fração da pilha, h, R$/kW·ano
+const COMPLETO = { pilha: 0.175, vidaPilha: 50000, encEPE: 120, tarifa: "TG1" };   // fração da pilha, h, R$/kW·ano, tarifa do gás
+
+// Tarifas brutas da SCGÁS (R$/m³ a 20 °C, com ICMS e PIS/COFINS), vigentes desde 1/7/2026, por consumo diário:
+//  TG1, industrial (a mais comum do setor industrial), faturada em cascata: cada faixa só sobre o volume dentro dela;
+//  TGG, geração distribuída, "por faixa": todo o volume ao preço da faixa em que cai (leitura adotada, hipótese);
+//  TMP, matéria-prima, em cascata (a tarifa das versões anteriores).
+const FAIXAS = {
+  TG1: [[5, 6.9967], [10, 5.4469], [70, 5.3166], [1000, 3.8899], [5000, 3.7817], [10000, 3.7474], [25000, 3.6337],
+        [50000, 3.5563], [100000, 3.4601], [150000, 3.2325], [200000, 3.2044], [Infinity, 3.1814]],
+  TGG: [[10000, 3.2911], [90000, 3.0883], [200000, 3.0219], [Infinity, 3.0219]],
+  TMP: [[10000, 3.2911], [90000, 3.1667], [200000, 3.0840], [Infinity, 3.0840]],
+};
+const P_GN_SITE = 3.1667;   // preço plano do site e da planilha (TMP, faixa de 10.001 a 90.000 m³/dia)
+function custoDia(tab, q) {            // R$/dia para q m³/dia
+  const f = FAIXAS[tab];
+  if (tab === "TGG") return q * f.find(([lim]) => q <= lim)[1];
+  let c = 0, ant = 0;
+  for (const [lim, preco] of f) { const v = Math.min(q, lim) - ant; if (v <= 0) break; c += v * preco; ant = lim; }
+  return c;
+}
+// preço médio do gás evitado (R$/m³): custo do ciclo 0 menos o do proposto, dividido pelo volume evitado
+function precoEvitado(tarifa, gn0, gn1) {
+  const q0 = gn0 * P, q1 = gn1 * P;
+  const [t0, t1] = tarifa === "TG1+TGG" ? ["TG1", "TGG"] : [tarifa, tarifa];
+  return (custoDia(t0, q0) - custoDia(t1, q1)) / (q0 - q1);
+}
 
 const calc = (extra = {}) => S.M.calcular(P, { ...REV, ...extra });
 
@@ -30,13 +55,17 @@ function extras(r, x, o = COMPLETO) {
   }
   const pilhasAno = vpPilhas * x.frc;
   const tusdgKw = x.rdUs / k.P_FV;                           // R$/kW·ano de tarifa da usina já contada
-  const encAno = Math.max(0, o.encEPE - tusdgKw) * k.P_FV / S.PC.BRL;
+  // R$ da EPE ao câmbio da EPE (6,10, como o preço e a O&M da FV); a tarifa da usina, da ANEEL de 2026, ao câmbio de hoje
+  const encAno = Math.max(0, o.encEPE / S.PC.FX_EPE - tusdgKw / S.PC.BRL) * k.P_FV;
   return { nPilhas: n, vpPilhas, pilhasAno, encAno, tusdgKw, total: pilhasAno + encAno };
 }
 
 // econ() do site mais os custos da revisão; devolve os mesmos campos, recalculados
 function econRev(r, o = COMPLETO) {
   const x = S.econ(r);
+  // gás evitado pela tarifa escolhida, em cascata; um cenário que multiplica S.PE.P_GN multiplica também este preço
+  x.pGn = precoEvitado(o.tarifa || "TG1", S.PE.GN0, S.PE.GN1) * S.PE.P_GN / P_GN_SITE;
+  x.ecGn = x.gn * x.pGn / S.PC.BRL; x.ec = x.ecGn + x.ecEl;
   const e = extras(r, x, o);
   const y = { ...x, ext: e };
   y.om = x.om + e.total; y.fluxo = x.ec - y.om;
@@ -62,4 +91,4 @@ function caso(extra = {}, { celz, fv, ajusta, o } = {}) {
   return { v, r, x, semTrc };
 }
 
-module.exports = { ...S, P, REV, ETA_BASE, COMPLETO, calc, extras, econRev, caso };
+module.exports = { ...S, P, REV, ETA_BASE, COMPLETO, FAIXAS, P_GN_SITE, custoDia, precoEvitado, calc, extras, econRev, caso };

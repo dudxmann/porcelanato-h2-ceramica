@@ -10,7 +10,7 @@ def troca(arq, pares):
     p = AQUI / arq
     t = p.read_text(encoding="utf-8")
     for velho, novo in pares:
-        if novo in t and velho not in t:
+        if velho not in t:   # já aplicado, ou o trecho foi reescrito por uma parte posterior
             continue
         n = t.count(velho)
         if n != 1:
@@ -50,6 +50,6 @@ print("✓ referencias_rev.tex")
 troca("figs/gera_figs_rev.py", [
     # 7. Tornado: caso-base com uma casa, como no texto (−263,5)
     ('ax.set_xlabel(f"VPL (US$ milhões); caso-base {br(base, 0)}")', 'ax.set_xlabel(f"VPL (US$ milhões); caso-base {br(base, 1)}")'),
-    # 8. Fig. 8a: a nota sobre o tamanho mínimo cobria as curvas; vai para o canto livre de cima
-    ("ax1.text(58, -300, f\"pontos:", "ax1.text(66, -243, f\"pontos:"),
+    # 8. Fig. 8a: a nota sobre o tamanho mínimo cobria as curvas; agora fica em coordenadas do eixo,
+    #    no canto livre de cima (já feito em gera_figs_rev.py)
 ])
