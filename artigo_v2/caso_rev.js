@@ -32,12 +32,12 @@ const passos = [
   ["+ turbina a 31,5% (Taurus 60)", R.caso({}, { o: SEM })],
   ["+ troca das pilhas", R.caso({}, { o: { ...R.COMPLETO, encEPE: 0, tarifa: "TMP" } })],
   ["+ encargos da FV (EPE)", R.caso({}, { o: { ...R.COMPLETO, tarifa: "TMP" } })],
-  ["+ tarifa industrial TG1 em cascata: caso-base revisado", base],
+  ["+ tarifa industrial TG1 em cascata: caso-base", base],
 ].map(([n, c]) => ({ nome: n, ...resumo(c) }));
 
 // ── robustez: uma hipótese técnica ou de custo por vez ──
 const ROB = [
-  ["Caso-base revisado", {}],
+  ["Caso-base", {}],
   ["Turbina a 35% (Boyce)", { ETA: 0.35 }],
   ["Eletrólise de 2030 (54 kWh/kg)", { KWH_KG: 54 }],
   ["Frações de calor 49/39/12%", { FR_FOR: 0.49, FR_AT: 0.39, FR_SEC: 0.12 }],

@@ -27,7 +27,7 @@ pares = [
      "O queimador de duto completa a energia queimando \\Ht{} no oxigênio que sobra no escape: o ar em excesso da turbina leva cerca de 10,5~kg/m² de \\Ot, e o queimador consome 0,37~kg/m², menos de 4\\% disso:"),
     # Diluição e umidade no secador
     ("e o trocador da exaustão é dispensado (com 35\\%, o escape menor deixa ar de menos e o trocador entrega 1,48~\\MJt/m²).",
-     "e o trocador da exaustão é dispensado (com 35\\%, o escape menor deixa ar de menos e o trocador entrega 1,48~\\MJt/m²). O ar chega a cerca de 230~°C e precisa ser diluído com ar ambiente até a temperatura de uso do secador; essa diluição e a umidade dos gases de \\Ht{} ficam para o projeto de detalhe."),
+     "e o trocador da exaustão é dispensado (com 35\\%, o escape menor deixa ar de menos e o trocador entrega 1,48~\\MJt/m²). O ar chega a 225~°C, e só a parte necessária entra no secador, diluída com ar ambiente até a temperatura de uso; essa diluição e a umidade dos gases de \\Ht{} ficam para o projeto de detalhe."),
     # Faturas diárias na TG1
     ("(o ciclo 0 usa 88,2~mil~m³/dia e o proposto, 35,5~mil, e o gás evitado",
      "(o ciclo 0 usa 88,2~mil~m³/dia, uma fatura de R\\$~313,6~mil por dia, e o proposto, 35,5~mil, R\\$~129,8~mil por dia; o gás evitado"),
