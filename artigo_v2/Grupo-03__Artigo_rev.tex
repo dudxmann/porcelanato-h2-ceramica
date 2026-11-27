@@ -9,7 +9,7 @@
 \frenchspacing
 \usepackage[a4paper,top=24mm,bottom=24mm,left=15mm,right=15mm,columnsep=6mm,footskip=10mm]{geometry}
 \usepackage{fontspec}
-\usepackage[brazilian]{babel}
+\usepackage[brazilian,provide=*]{babel} % provide=*: carrega o português pelo .ini do babel, sem depender do pacote babel-portuges
 \usepackage{amsmath}
 \usepackage{unicode-math}
 \setmainfont{texgyretermes}[Extension=.otf,UprightFont=*-regular,BoldFont=*-bold,ItalicFont=*-italic,BoldItalicFont=*-bolditalic]
@@ -539,7 +539,7 @@ Duas escolhas foram otimizadas com o mesmo modelo: o tamanho do eletrolisador, c
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{figs/fig_otim_rev.pdf}
-\caption{Otimização: (a) VPL em função do tamanho do eletrolisador, que opera em cada mês nas horas de PLD mais baixo; (b) VPL e \COt{} fóssil das 286 configurações de uso do \Ht{} (pontos cinzentos) e caminho do sem \Ht{} ao ciclo proposto, com o custo de cada passo por tonelada de \COt{} evitada.}\label{fig:otim}
+\caption{Otimização: (a) VPL em função do tamanho do eletrolisador, que opera em cada mês nas horas de PLD mais baixo; (b) VPL e \COt{} fóssil das 286 configurações de uso do \Ht{} (círculos cinzentos, quase todos sobre a reta) e caminho do sem \Ht{} ao ciclo proposto, com o custo de cada passo por tonelada de \COt{} evitada.}\label{fig:otim}
 \end{figure*}
 
 \textit{Uso do \Ht.} Foram combinados o forno (\Ht{} com \Ot{} ou gás natural com ar), a fração do queimador de duto suprida por \Ht{} (0 a 100\%) e o \Ht{} na turbina (0 a 30\% em volume), em 286 configurações; com o forno a gás, não há conversão de queimadores, e o duto só a gás usa o queimador do atomizador (hipóteses). Sem nenhum \Ht, com a turbina a gás natural e a recuperação, o VPL é de +US\$~24,2 milhões (zera com a eletricidade a R\$~323/MWh), mas o \COt{} quase não cai (6,07~kg/m²): a turbina troca por gás a eletricidade da rede, de fator de emissão baixo \cite{mcti2024}, e o seu escape ocupa o lugar do ar recuperado no atomizador. A partir daí, cada uso do \Ht{} custa quase o mesmo por tonelada de \COt{} evitada (Tabela~\ref{tab:otim}): 614~US\$/t no forno, 650 no duto e 647 na turbina (sem converter o forno, o duto e a turbina custariam 670 e 669~US\$/t), sobre uma mesma reta, a no máximo US\$~3 milhões dela (Fig.~\ref{fig:otim}b), com 619~US\$/t do sem \Ht{} ao proposto: não há ótimo intermediário. Até 5,47~kg/m² o maior VPL vem do duto e da turbina, com o forno a gás; abaixo disso entra o forno, de uma vez (tudo ou nada, hipótese). Nenhuma configuração fica abaixo do limite do SBCE: o menor valor, o do proposto, é de 26,1~mil~t/ano, e chegar a 25~mil exigiria 38\% de \Ht{} na turbina, acima do que os combustores admitem hoje \cite{netl2022}.
