@@ -113,7 +113,7 @@ const GRUPOS = [
   ["TRC", "Calor do ar do trocador", "Q_trc", "MJt/m²", "{Q_SEC}-{AR_SEC}", "Eq. (56)", 2],
   ["M_AR_SEC", "Massa de ar de resfriamento no secador", "m_ar,sec", "kg/m²", "{AR_SEC}*1000/({CP}*({T_ARQ}-25))", "Seção 7.4", 2],
   ["M_TRC", "Massa de ar do trocador", "m_trc", "kg/m²", "{TRC}*1000/({CP}*({T_TRC}-25))", "Seção 7.4", 2],
-  ["T_SEC_IN", "Temperatura de entrada no secador", "T_sec", "°C", "25+{Q_SEC}*1000/(MAX({M_AR_SEC}+{M_TRC},{Q_SEC}*1000/({CP}*({T_ARQ}-25)))*{CP})", "Eq. (57); com ar de sobra, entra só o necessário e a mistura não passa de T_ar", 0],
+  ["T_SEC_IN", "Temperatura de entrada no secador", "T_sec", "°C", "25+{Q_SEC}*1000/(MAX({M_AR_SEC}+{M_TRC};{Q_SEC}*1000/({CP}*({T_ARQ}-25)))*{CP})", "Eq. (57); com ar de sobra, entra só o necessário e a mistura não passa de T_ar", 0],
  ]],
  ["Forno a H₂ com O₂ da eletrólise", [
   ["LAMBDA", "Excesso de ar no forno a gás", "λ", "–", 1.15, "hipótese", 2],
